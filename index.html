@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tteuh — Services Manager</title>
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts Cinzel & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -60,7 +58,6 @@
     <div class="w-full max-w-md bg-obsidian-900 rounded-2xl p-6 sm:p-8 rpg-border relative z-10">
       <div class="flex flex-col items-center text-center mb-6">
         <div class="w-14 h-14 rounded-xl gold-gradient flex items-center justify-center text-obsidian-950 shadow-lg shadow-amber-500/20 mb-3">
-          <!-- Ícone Espadas SVG -->
           <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/><line x1="19" y1="21" x2="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" y1="14" x2="9" y2="18"/><line x1="7" y1="17" x2="4" y2="20"/><line x1="3" y1="19" x2="5" y2="21"/></svg>
         </div>
         <h1 class="font-rpg font-bold text-2xl text-gold-500 tracking-wider">Tteuh</h1>
@@ -68,11 +65,11 @@
       </div>
 
       <!-- Abas Login / Cadastro -->
-      <div class="grid grid-cols-2 gap-2 p-1 bg-obsidian-950 rounded-xl border border-gold-500/15 mb-6">
-        <button type="button" id="tabAuthLogin" onclick="switchAuthMode('login')" class="py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all cursor-pointer">
+      <div class="grid grid-cols-2 gap-2 p-1 bg-obsidian-950 rounded-xl border border-gold-500/15 mb-6 relative z-20">
+        <button type="button" id="tabAuthLogin" class="py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all cursor-pointer">
           Conectar
         </button>
-        <button type="button" id="tabAuthRegister" onclick="switchAuthMode('register')" class="py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all cursor-pointer">
+        <button type="button" id="tabAuthRegister" class="py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all cursor-pointer">
           Criar Conta
         </button>
       </div>
@@ -81,7 +78,7 @@
       <div id="authAlert" class="hidden mb-4 px-3.5 py-2.5 rounded-xl bg-rose-950/80 border border-rose-500/40 text-rose-200 text-xs font-medium"></div>
 
       <!-- Form Login -->
-      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+      <form id="loginForm" class="space-y-4">
         <div>
           <label class="block text-xs font-medium text-slate-400 mb-1.5">E-mail</label>
           <input type="email" id="loginEmail" required placeholder="seu@email.com"
@@ -94,12 +91,12 @@
         </div>
         <button type="submit" id="btnLoginSubmit" class="w-full py-2.5 rounded-xl gold-gradient text-obsidian-950 font-bold text-sm hover:opacity-95 transition-opacity shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-          Entrar no Painel
+          <span>Entrar no Painel</span>
         </button>
       </form>
 
       <!-- Form Cadastro -->
-      <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+      <form id="registerForm" class="space-y-4 hidden">
         <div>
           <label class="block text-xs font-medium text-slate-400 mb-1.5">Nome de Exibição</label>
           <input type="text" id="regName" required placeholder="Ex: Lord Paulistinha"
@@ -117,7 +114,7 @@
         </div>
         <button type="submit" id="btnRegSubmit" class="w-full py-2.5 rounded-xl gold-gradient text-obsidian-950 font-bold text-sm hover:opacity-95 transition-opacity shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-          Criar Conta e Conectar
+          <span>Criar Conta e Conectar</span>
         </button>
       </form>
     </div>
@@ -127,12 +124,11 @@
   <div id="appShell" class="min-h-screen flex flex-col lg:flex-row hidden">
 
     <!-- Overlay Mobile Sidebar -->
-    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/70 z-30 hidden lg:hidden backdrop-blur-sm"></div>
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/70 z-30 hidden lg:hidden backdrop-blur-sm"></div>
 
     <!-- Sidebar Esquerda -->
     <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-obsidian-950 border-r border-gold-500/20 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col justify-between">
       <div>
-        <!-- Logo Título -->
         <div class="p-6 border-b border-gold-500/20 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-lg gold-gradient flex items-center justify-center text-obsidian-950 shadow-lg shadow-amber-500/20">
@@ -143,7 +139,7 @@
               <span class="text-xs text-slate-400 font-medium tracking-wider uppercase">Services Manager</span>
             </div>
           </div>
-          <button type="button" onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1">
+          <button type="button" id="btnCloseSidebar" class="lg:hidden text-slate-400 hover:text-white p-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
@@ -179,7 +175,7 @@
 
       <!-- Rodapé Sidebar -->
       <div class="p-4 border-t border-gold-500/15">
-        <button type="button" onclick="logoutUser()" class="w-full py-2.5 px-3 rounded-lg text-xs font-medium text-rose-400 hover:text-white hover:bg-rose-500/20 border border-rose-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer">
+        <button type="button" id="btnLogoutSidebar" class="w-full py-2.5 px-3 rounded-lg text-xs font-medium text-rose-400 hover:text-white hover:bg-rose-500/20 border border-rose-500/30 transition-all flex items-center justify-center gap-2 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Desconectar Conta
         </button>
@@ -193,7 +189,7 @@
       <header class="sticky top-0 z-20 bg-obsidian-950/90 backdrop-blur-md border-b border-gold-500/20 px-4 sm:px-8 py-4">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div class="flex items-center gap-3">
-            <button type="button" onclick="toggleSidebar()" class="lg:hidden p-2.5 rounded-lg bg-obsidian-800 border border-gold-500/20 text-gold-400 hover:bg-obsidian-700">
+            <button type="button" id="btnOpenSidebar" class="lg:hidden p-2.5 rounded-lg bg-obsidian-800 border border-gold-500/20 text-gold-400 hover:bg-obsidian-700">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
             <div>
@@ -202,7 +198,7 @@
             </div>
           </div>
 
-          <button type="button" onclick="logoutUser()" class="px-3.5 py-2 rounded-xl bg-obsidian-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-obsidian-600 hover:border-rose-500/30 text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer">
+          <button type="button" id="btnLogoutHeader" class="px-3.5 py-2 rounded-xl bg-obsidian-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-obsidian-600 hover:border-rose-500/30 text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             <span>Desconectar</span>
           </button>
@@ -268,7 +264,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gold-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
             Registrar Novo Service
           </h3>
-          <form id="serviceForm" onsubmit="addService(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+          <form id="serviceForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
             <div class="lg:col-span-2">
               <label class="block text-xs text-slate-400 mb-1">Tipo de Service / Quest / Boss</label>
               <input type="text" id="srvName" required placeholder="Ex: Soul War Full, Primal Ordeal, Ferumbras..."
@@ -311,11 +307,11 @@
               Agenda e Histórico de Services
             </h3>
             <div class="flex flex-wrap gap-2">
-              <button type="button" onclick="setServiceFilter('all')" id="filter-srv-all" class="srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 cursor-pointer">Todos</button>
-              <button type="button" onclick="setServiceFilter('pending_pay')" id="filter-srv-pending_pay" class="srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white cursor-pointer">Pgto Pendente</button>
-              <button type="button" onclick="setServiceFilter('paid')" id="filter-srv-paid" class="srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white cursor-pointer">Pagos</button>
-              <button type="button" onclick="setServiceFilter('scheduled')" id="filter-srv-scheduled" class="srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white cursor-pointer">Agendados</button>
-              <button type="button" onclick="setServiceFilter('done')" id="filter-srv-done" class="srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white cursor-pointer">Concluídos</button>
+              <button type="button" data-filter="all" class="srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 cursor-pointer">Todos</button>
+              <button type="button" data-filter="pending_pay" class="srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white cursor-pointer">Pgto Pendente</button>
+              <button type="button" data-filter="paid" class="srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white cursor-pointer">Pagos</button>
+              <button type="button" data-filter="scheduled" class="srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white cursor-pointer">Agendados</button>
+              <button type="button" data-filter="done" class="srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white cursor-pointer">Concluídos</button>
             </div>
           </div>
 
@@ -346,426 +342,397 @@
     </div>
   </div>
 
-  <!-- Lógica Principal (Executa imediatamente sem depender de CDNs externos) -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCWhizAjYsl7_2QP8NI0zh9gbF-JhKCSu0",
-      authDomain: "tibia-tracker-a153d.firebaseapp.com",
-      projectId: "tibia-tracker-a153d",
-      storageBucket: "tibia-tracker-a153d.firebasestorage.app",
-      messagingSenderId: "360522982477",
-      appId: "1:360522982477:web:a42a33fc916b1f86496804"
-    };
-
-    let auth = null;
-    let db = null;
-    let currentUser = null;
-    let currentServices = [];
-    let currentServiceFilter = 'all';
-    let unsubscribeServices = null;
-
-    function escapeHTML(str) {
-      if (!str) return '';
-      return String(str).replace(/[&<>"']/g, m => ({
-        '&': '&',
-        '<': '<',
-        '>': '>',
-        '"': '"',
-        "'": '''
-      })[m]);
-    }
-
-    function showAuthAlert(msg) {
-      const el = document.getElementById('authAlert');
-      if (!el) return;
-      if (!msg) {
-        el.classList.add('hidden');
-        el.textContent = '';
-      } else {
-        el.textContent = msg;
-        el.classList.remove('hidden');
-      }
-    }
-
-    function showToast(msg, type = 'success') {
-      const container = document.getElementById('toastContainer');
-      if (!container) return;
-      const toast = document.createElement('div');
-      const colors = type === 'error'
-        ? 'bg-rose-950/95 border-rose-500/40 text-rose-200'
-        : 'bg-obsidian-800/95 border-gold-500/40 text-gold-300';
-      toast.className = `px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 ${colors}`;
-      toast.innerHTML = `<span>${escapeHTML(msg)}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-
-    function switchAuthMode(mode) {
-      showAuthAlert('');
-      const loginForm = document.getElementById('loginForm');
-      const registerForm = document.getElementById('registerForm');
-      const tabLogin = document.getElementById('tabAuthLogin');
-      const tabReg = document.getElementById('tabAuthRegister');
-
-      if (mode === 'login') {
-        loginForm.classList.remove('hidden');
-        registerForm.classList.add('hidden');
-        tabLogin.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all cursor-pointer';
-        tabReg.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all cursor-pointer';
-      } else {
-        loginForm.classList.add('hidden');
-        registerForm.classList.remove('hidden');
-        tabReg.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all cursor-pointer';
-        tabLogin.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all cursor-pointer';
-      }
-    }
-
-    function translateFirebaseError(code) {
-      switch (code) {
-        case 'auth/email-already-in-use':
-          return 'Este e-mail já está cadastrado. Tente conectar na aba "Conectar".';
-        case 'auth/invalid-email':
-          return 'Digite um endereço de e-mail válido.';
-        case 'auth/weak-password':
-          return 'A senha deve ter pelo menos 6 caracteres.';
-        case 'auth/user-not-found':
-        case 'auth/wrong-password':
-        case 'auth/invalid-credential':
-          return 'E-mail ou senha incorretos.';
-        case 'auth/unauthorized-domain':
-          return 'Domínio não autorizado no Firebase! Adicione hugolimaslv.github.io em Authentication > Settings > Authorized domains.';
-        case 'auth/operation-not-allowed':
-          return 'Login por E-mail/Senha não ativado no painel do Firebase.';
-        case 'auth/too-many-requests':
-          return 'Muitas tentativas seguidas. Aguarde alguns instantes e tente novamente.';
-        default:
-          return 'Erro: ' + (code || 'Falha de comunicação com o Firebase.');
-      }
-    }
-
-    function initFirebaseServices() {
-      if (typeof firebase === 'undefined') return false;
-      try {
-        if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
-        }
-        auth = firebase.auth();
-        db = firebase.firestore();
-
-        auth.onAuthStateChanged((user) => {
-          showAuthAlert('');
-          currentUser = user;
-
-          if (user) {
-            const displayName = user.displayName || user.email.split('@')[0];
-            document.getElementById('sidebarUserName').textContent = displayName;
-            document.getElementById('sidebarUserEmail').textContent = user.email;
-            const initials = displayName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'TT';
-            document.getElementById('userAvatar').textContent = initials;
-
-            document.getElementById('authScreen').classList.add('hidden');
-            document.getElementById('appShell').classList.remove('hidden');
-
-            const dateInput = document.getElementById('srvDate');
-            if (dateInput && !dateInput.value) {
-              dateInput.value = new Date().toISOString().split('T')[0];
-            }
-
-            listenUserServices(user.uid);
-          } else {
-            currentServices = [];
-            document.getElementById('appShell').classList.add('hidden');
-            document.getElementById('authScreen').classList.remove('hidden');
-          }
-        });
-        return true;
-      } catch (err) {
-        showAuthAlert('Erro ao iniciar Firebase: ' + err.message);
-        return false;
-      }
-    }
-
-    async function handleRegister(e) {
-      e.preventDefault();
-      if (!auth && !initFirebaseServices()) {
-        showAuthAlert('O navegador bloqueou a conexão externa com o Firebase (gstatic.com). Abra pelo link do GitHub Pages (hugolimaslv.github.io/tibia-tracker/) ou desative o AdBlock.');
-        return;
-      }
-      showAuthAlert('');
-      const btn = document.getElementById('btnRegSubmit');
-      const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const password = document.getElementById('regPass').value;
-
-      btn.disabled = true;
-      btn.textContent = 'Criando conta...';
-
-      try {
-        const cred = await auth.createUserWithEmailAndPassword(email, password);
-        await cred.user.updateProfile({ displayName: name });
-        document.getElementById('sidebarUserName').textContent = name;
-        const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'TT';
-        document.getElementById('userAvatar').textContent = initials;
-        document.getElementById('registerForm').reset();
-        showToast(`Conta criada com sucesso, ${name}!`);
-      } catch (err) {
-        showAuthAlert(translateFirebaseError(err.code));
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Criar Conta e Conectar';
-      }
-    }
-
-    async function handleLogin(e) {
-      e.preventDefault();
-      if (!auth && !initFirebaseServices()) {
-        showAuthAlert('O navegador bloqueou a conexão externa com o Firebase (gstatic.com). Abra pelo link do GitHub Pages (hugolimaslv.github.io/tibia-tracker/) ou desative o AdBlock.');
-        return;
-      }
-      showAuthAlert('');
-      const btn = document.getElementById('btnLoginSubmit');
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPass').value;
-
-      btn.disabled = true;
-      btn.textContent = 'Conectando...';
-
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-        document.getElementById('loginForm').reset();
-        showToast('Conectado com sucesso!');
-      } catch (err) {
-        showAuthAlert(translateFirebaseError(err.code));
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'Entrar no Painel';
-      }
-    }
-
-    async function logoutUser() {
-      try {
-        if (unsubscribeServices) {
-          unsubscribeServices();
-          unsubscribeServices = null;
-        }
-        if (auth) await auth.signOut();
-        showToast('Sessão encerrada.');
-      } catch (err) {
-        showToast('Erro ao desconectar.', 'error');
-      }
-    }
-
-    function listenUserServices(uid) {
-      if (!db) return;
-      if (unsubscribeServices) unsubscribeServices();
-
-      unsubscribeServices = db.collection('users').doc(uid).collection('services')
-        .orderBy('createdAt', 'desc')
-        .onSnapshot((snapshot) => {
-          currentServices = snapshot.docs.map(d => ({
-            id: d.id,
-            ...d.data()
-          }));
-          renderServices();
-        }, (error) => {
-          console.error('Erro ao ler Firestore:', error);
-          showToast('Erro no banco de dados: ' + error.code, 'error');
-        });
-    }
-
-    async function addService(e) {
-      e.preventDefault();
-      if (!currentUser || !db) return;
-
-      const btn = document.getElementById('btnAddService');
-      const name = document.getElementById('srvName').value.trim();
-      const client = document.getElementById('srvClient').value.trim();
-      const value = parseInt(document.getElementById('srvValue').value, 10) || 0;
-      const date = document.getElementById('srvDate').value;
-      const comment = document.getElementById('srvComment').value.trim();
-
-      btn.disabled = true;
-      try {
-        const newId = 'srv_' + Date.now();
-        await db.collection('users').doc(currentUser.uid).collection('services').doc(newId).set({
-          name,
-          client,
-          value,
-          date,
-          comment,
-          status: 'Agendado',
-          paid: false,
-          createdAt: Date.now()
-        });
-
-        document.getElementById('srvName').value = '';
-        document.getElementById('srvClient').value = '';
-        document.getElementById('srvValue').value = '';
-        document.getElementById('srvComment').value = '';
-        showToast('Service salvo na nuvem!');
-      } catch (err) {
-        console.error(err);
-        showToast('Erro ao salvar service: ' + err.code, 'error');
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    async function cycleServiceStatus(id) {
-      if (!currentUser || !db) return;
-      const order = ['Agendado', 'Em Andamento', 'Concluído'];
-      const srv = currentServices.find(s => s.id === id);
-      if (!srv) return;
-
-      const nextStatus = order[(order.indexOf(srv.status) + 1) % order.length];
-      try {
-        await db.collection('users').doc(currentUser.uid).collection('services').doc(id).update({
-          status: nextStatus
-        });
-      } catch (err) {
-        showToast('Erro ao atualizar status.', 'error');
-      }
-    }
-
-    async function toggleServicePaid(id) {
-      if (!currentUser || !db) return;
-      const srv = currentServices.find(s => s.id === id);
-      if (!srv) return;
-
-      try {
-        await db.collection('users').doc(currentUser.uid).collection('services').doc(id).update({
-          paid: !srv.paid
-        });
-      } catch (err) {
-        showToast('Erro ao atualizar pagamento.', 'error');
-      }
-    }
-
-    async function deleteService(id) {
-      if (!currentUser || !db) return;
-      try {
-        await db.collection('users').doc(currentUser.uid).collection('services').doc(id).delete();
-        showToast('Service removido.');
-      } catch (err) {
-        showToast('Erro ao excluir service.', 'error');
-      }
-    }
-
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      sidebar.classList.toggle('-translate-x-full');
-      overlay.classList.toggle('hidden');
-    }
-
-    function setServiceFilter(filter) {
-      currentServiceFilter = filter;
-      document.querySelectorAll('.srv-filter-btn').forEach(btn => {
-        btn.className = 'srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white cursor-pointer';
-      });
-      const activeBtn = document.getElementById(`filter-srv-${filter}`);
-      if (activeBtn) {
-        activeBtn.className = 'srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 cursor-pointer';
-      }
-      renderServices();
-    }
-
-    function renderServices() {
-      let pendingTc = 0, pendingCount = 0;
-      let paidTc = 0, paidCount = 0;
-      let completedCount = 0;
-
-      currentServices.forEach(s => {
-        const val = Number(s.value) || 0;
-        if (s.paid) {
-          paidTc += val;
-          paidCount++;
-        } else {
-          pendingTc += val;
-          pendingCount++;
-        }
-        if (s.status === 'Concluído') completedCount++;
-      });
-
-      document.getElementById('statTcPending').textContent = `${pendingTc.toLocaleString('pt-BR')} TC`;
-      document.getElementById('statCountPending').textContent = `${pendingCount} service(s) pendente(s)`;
-      document.getElementById('statTcPaid').textContent = `${paidTc.toLocaleString('pt-BR')} TC`;
-      document.getElementById('statCountPaid').textContent = `${paidCount} pagamento(s) confirmado(s)`;
-      document.getElementById('statTcTotal').textContent = `${(pendingTc + paidTc).toLocaleString('pt-BR')} TC`;
-      document.getElementById('statCompleted').textContent = `${completedCount} / ${currentServices.length}`;
-      document.getElementById('badge-services').textContent = currentServices.length;
-
-      const filtered = currentServices.filter(s => {
-        if (currentServiceFilter === 'pending_pay') return !s.paid;
-        if (currentServiceFilter === 'paid') return s.paid;
-        if (currentServiceFilter === 'scheduled') return s.status === 'Agendado' || s.status === 'Em Andamento';
-        if (currentServiceFilter === 'done') return s.status === 'Concluído';
-        return true;
-      });
-
-      const tbody = document.getElementById('servicesTableBody');
-      const emptyMsg = document.getElementById('emptyServicesMsg');
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = '';
-        emptyMsg.classList.remove('hidden');
-        return;
-      }
-
-      emptyMsg.classList.add('hidden');
-      tbody.innerHTML = filtered.map(s => {
-        const statusStyles = {
-          'Agendado': 'bg-sky-500/15 text-sky-400 border-sky-500/30',
-          'Em Andamento': 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-          'Concluído': 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
-        };
-        const formattedDate = s.date ? s.date.split('-').reverse().join('/') : '-';
-        const commentHtml = s.comment
-          ? `<div class="mt-1 flex items-start gap-1.5 text-xs text-slate-400"><span>💬 ${escapeHTML(s.comment)}</span></div>`
-          : '';
-
-        return `
-          <tr class="hover:bg-obsidian-700/30 transition-colors">
-            <td class="py-3.5 px-4">
-              <div class="font-medium text-white">${escapeHTML(s.name)}</div>
-              ${commentHtml}
-            </td>
-            <td class="py-3.5 px-4 text-slate-300">${escapeHTML(s.client)}</td>
-            <td class="py-3.5 px-4 text-slate-400 text-xs">${formattedDate}</td>
-            <td class="py-3.5 px-4 font-bold text-gold-400">${(Number(s.value) || 0).toLocaleString('pt-BR')} TC</td>
-            <td class="py-3.5 px-4">
-              <button type="button" onclick="cycleServiceStatus('${s.id}')" title="Clique para alternar status"
-                class="px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${statusStyles[s.status] || statusStyles['Agendado']}">
-                ${escapeHTML(s.status)}
-              </button>
-            </td>
-            <td class="py-3.5 px-4">
-              <button type="button" onclick="toggleServicePaid('${s.id}')" title="Clique para alternar pagamento"
-                class="px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${s.paid ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border-rose-500/30'}">
-                ${s.paid ? 'Pago' : 'Pendente'}
-              </button>
-            </td>
-            <td class="py-3.5 px-4 text-right">
-              <button type="button" onclick="deleteService('${s.id}')" title="Excluir service"
-                class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer">
-                🗑️
-              </button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-  </script>
-
-  <!-- Firebase SDK carregado ao final para nunca travar a interface -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
   <script>
-    initFirebaseServices();
+    (function () {
+      const firebaseConfig = {
+        apiKey: "AIzaSyCWhizAjYsl7_2QP8NI0zh9gbF-JhKCSu0",
+        authDomain: "tibia-tracker-a153d.firebaseapp.com",
+        projectId: "tibia-tracker-a153d",
+        storageBucket: "tibia-tracker-a153d.firebasestorage.app",
+        messagingSenderId: "360522982477",
+        appId: "1:360522982477:web:a42a33fc916b1f86496804"
+      };
+
+      let auth = null;
+      let db = null;
+      let currentUser = null;
+      let currentServices = [];
+      let currentServiceFilter = 'all';
+      let unsubscribeServices = null;
+
+      function escapeHTML(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, function (m) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+        });
+      }
+
+      function showAuthAlert(msg) {
+        const el = document.getElementById('authAlert');
+        if (!el) return;
+        if (!msg) {
+          el.classList.add('hidden');
+          el.textContent = '';
+        } else {
+          el.textContent = msg;
+          el.classList.remove('hidden');
+        }
+      }
+
+      function showToast(msg, type) {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        const toast = document.createElement('div');
+        const colors = type === 'error'
+          ? 'bg-rose-950/95 border-rose-500/40 text-rose-200'
+          : 'bg-obsidian-800/95 border-gold-500/40 text-gold-300';
+        toast.className = 'px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 ' + colors;
+        toast.textContent = msg;
+        container.appendChild(toast);
+        setTimeout(function () {
+          toast.style.opacity = '0';
+          setTimeout(function () { toast.remove(); }, 300);
+        }, 3000);
+      }
+
+      function switchAuthMode(mode) {
+        showAuthAlert('');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const tabLogin = document.getElementById('tabAuthLogin');
+        const tabReg = document.getElementById('tabAuthRegister');
+
+        if (mode === 'login') {
+          loginForm.classList.remove('hidden');
+          registerForm.classList.add('hidden');
+          tabLogin.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all cursor-pointer';
+          tabReg.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all cursor-pointer';
+        } else {
+          loginForm.classList.add('hidden');
+          registerForm.classList.remove('hidden');
+          tabReg.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all cursor-pointer';
+          tabLogin.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all cursor-pointer';
+        }
+      }
+
+      // Vincula eventos das abas imediatamente
+      document.getElementById('tabAuthLogin').addEventListener('click', function () {
+        switchAuthMode('login');
+      });
+      document.getElementById('tabAuthRegister').addEventListener('click', function () {
+        switchAuthMode('register');
+      });
+
+      function translateFirebaseError(code) {
+        switch (code) {
+          case 'auth/email-already-in-use':
+            return 'Este e-mail já está cadastrado. Tente conectar na aba "Conectar".';
+          case 'auth/invalid-email':
+            return 'Digite um endereço de e-mail válido.';
+          case 'auth/weak-password':
+            return 'A senha deve ter pelo menos 6 caracteres.';
+          case 'auth/user-not-found':
+          case 'auth/wrong-password':
+          case 'auth/invalid-credential':
+            return 'E-mail ou senha incorretos.';
+          case 'auth/unauthorized-domain':
+            return 'Domínio não autorizado no Firebase! Adicione hugolimaslv.github.io em Authentication > Settings > Authorized domains.';
+          case 'auth/operation-not-allowed':
+            return 'Login por E-mail/Senha não ativado no painel do Firebase.';
+          case 'auth/too-many-requests':
+            return 'Muitas tentativas seguidas. Aguarde alguns instantes e tente novamente.';
+          default:
+            return 'Erro: ' + (code || 'Falha de comunicação com o Firebase.');
+        }
+      }
+
+      function initFirebaseServices() {
+        if (typeof firebase === 'undefined') return false;
+        try {
+          if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+          }
+          auth = firebase.auth();
+          db = firebase.firestore();
+
+          auth.onAuthStateChanged(function (user) {
+            showAuthAlert('');
+            currentUser = user;
+
+            if (user) {
+              const displayName = user.displayName || user.email.split('@')[0];
+              document.getElementById('sidebarUserName').textContent = displayName;
+              document.getElementById('sidebarUserEmail').textContent = user.email;
+              const initials = displayName.split(' ').map(function (n) { return n[0]; }).join('').substring(0, 2).toUpperCase() || 'TT';
+              document.getElementById('userAvatar').textContent = initials;
+
+              document.getElementById('authScreen').classList.add('hidden');
+              document.getElementById('appShell').classList.remove('hidden');
+
+              const dateInput = document.getElementById('srvDate');
+              if (dateInput && !dateInput.value) {
+                dateInput.value = new Date().toISOString().split('T')[0];
+              }
+
+              listenUserServices(user.uid);
+            } else {
+              currentServices = [];
+              document.getElementById('appShell').classList.add('hidden');
+              document.getElementById('authScreen').classList.remove('hidden');
+            }
+          });
+          return true;
+        } catch (err) {
+          showAuthAlert('Erro ao iniciar Firebase: ' + err.message);
+          return false;
+        }
+      }
+
+      document.getElementById('registerForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!auth && !initFirebaseServices()) {
+          showAuthAlert('O navegador bloqueou o script do Firebase (gstatic.com). Desative o AdBlock/extensões e recarregue.');
+          return;
+        }
+        showAuthAlert('');
+        const btn = document.getElementById('btnRegSubmit');
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPass').value;
+
+        btn.disabled = true;
+        btn.querySelector('span').textContent = 'Criando conta...';
+
+        try {
+          const cred = await auth.createUserWithEmailAndPassword(email, password);
+          await cred.user.updateProfile({ displayName: name });
+          document.getElementById('sidebarUserName').textContent = name;
+          const initials = name.split(' ').map(function (n) { return n[0]; }).join('').substring(0, 2).toUpperCase() || 'TT';
+          document.getElementById('userAvatar').textContent = initials;
+          document.getElementById('registerForm').reset();
+          showToast('Conta criada com sucesso, ' + name + '!');
+        } catch (err) {
+          showAuthAlert(translateFirebaseError(err.code));
+        } finally {
+          btn.disabled = false;
+          btn.querySelector('span').textContent = 'Criar Conta e Conectar';
+        }
+      });
+
+      document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!auth && !initFirebaseServices()) {
+          showAuthAlert('O navegador bloqueou o script do Firebase (gstatic.com). Desative o AdBlock/extensões e recarregue.');
+          return;
+        }
+        showAuthAlert('');
+        const btn = document.getElementById('btnLoginSubmit');
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPass').value;
+
+        btn.disabled = true;
+        btn.querySelector('span').textContent = 'Conectando...';
+
+        try {
+          await auth.signInWithEmailAndPassword(email, password);
+          document.getElementById('loginForm').reset();
+          showToast('Conectado com sucesso!');
+        } catch (err) {
+          showAuthAlert(translateFirebaseError(err.code));
+        } finally {
+          btn.disabled = false;
+          btn.querySelector('span').textContent = 'Entrar no Painel';
+        }
+      });
+
+      async function logoutUser() {
+        try {
+          if (unsubscribeServices) {
+            unsubscribeServices();
+            unsubscribeServices = null;
+          }
+          if (auth) await auth.signOut();
+          showToast('Sessão encerrada.');
+        } catch (err) {
+          showToast('Erro ao desconectar.', 'error');
+        }
+      }
+
+      document.getElementById('btnLogoutSidebar').addEventListener('click', logoutUser);
+      document.getElementById('btnLogoutHeader').addEventListener('click', logoutUser);
+
+      function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        document.getElementById('sidebarOverlay').classList.toggle('hidden');
+      }
+
+      document.getElementById('btnOpenSidebar').addEventListener('click', toggleSidebar);
+      document.getElementById('btnCloseSidebar').addEventListener('click', toggleSidebar);
+      document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
+
+      function listenUserServices(uid) {
+        if (!db) return;
+        if (unsubscribeServices) unsubscribeServices();
+
+        unsubscribeServices = db.collection('users').doc(uid).collection('services')
+          .orderBy('createdAt', 'desc')
+          .onSnapshot(function (snapshot) {
+            currentServices = snapshot.docs.map(function (d) {
+              return Object.assign({ id: d.id }, d.data());
+            });
+            renderServices();
+          }, function (error) {
+            showToast('Erro no banco de dados: ' + error.code, 'error');
+          });
+      }
+
+      document.getElementById('serviceForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!currentUser || !db) return;
+
+        const btn = document.getElementById('btnAddService');
+        const name = document.getElementById('srvName').value.trim();
+        const client = document.getElementById('srvClient').value.trim();
+        const value = parseInt(document.getElementById('srvValue').value, 10) || 0;
+        const date = document.getElementById('srvDate').value;
+        const comment = document.getElementById('srvComment').value.trim();
+
+        btn.disabled = true;
+        try {
+          const newId = 'srv_' + Date.now();
+          await db.collection('users').doc(currentUser.uid).collection('services').doc(newId).set({
+            name: name,
+            client: client,
+            value: value,
+            date: date,
+            comment: comment,
+            status: 'Agendado',
+            paid: false,
+            createdAt: Date.now()
+          });
+
+          document.getElementById('srvName').value = '';
+          document.getElementById('srvClient').value = '';
+          document.getElementById('srvValue').value = '';
+          document.getElementById('srvComment').value = '';
+          showToast('Service salvo na nuvem!');
+        } catch (err) {
+          showToast('Erro ao salvar service: ' + err.code, 'error');
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      document.querySelectorAll('.srv-filter-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          currentServiceFilter = btn.getAttribute('data-filter');
+          document.querySelectorAll('.srv-filter-btn').forEach(function (b) {
+            b.className = 'srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white cursor-pointer';
+          });
+          btn.className = 'srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 cursor-pointer';
+          renderServices();
+        });
+      });
+
+      document.getElementById('servicesTableBody').addEventListener('click', async function (e) {
+        const statusBtn = e.target.closest('[data-action="status"]');
+        const paidBtn = e.target.closest('[data-action="paid"]');
+        const deleteBtn = e.target.closest('[data-action="delete"]');
+
+        if (statusBtn && currentUser && db) {
+          const id = statusBtn.getAttribute('data-id');
+          const order = ['Agendado', 'Em Andamento', 'Concluído'];
+          const srv = currentServices.find(function (s) { return s.id === id; });
+          if (srv) {
+            const nextStatus = order[(order.indexOf(srv.status) + 1) % order.length];
+            await db.collection('users').doc(currentUser.uid).collection('services').doc(id).update({ status: nextStatus });
+          }
+        } else if (paidBtn && currentUser && db) {
+          const id = paidBtn.getAttribute('data-id');
+          const srv = currentServices.find(function (s) { return s.id === id; });
+          if (srv) {
+            await db.collection('users').doc(currentUser.uid).collection('services').doc(id).update({ paid: !srv.paid });
+          }
+        } else if (deleteBtn && currentUser && db) {
+          const id = deleteBtn.getAttribute('data-id');
+          await db.collection('users').doc(currentUser.uid).collection('services').doc(id).delete();
+          showToast('Service removido.');
+        }
+      });
+
+      function renderServices() {
+        let pendingTc = 0, pendingCount = 0;
+        let paidTc = 0, paidCount = 0;
+        let completedCount = 0;
+
+        currentServices.forEach(function (s) {
+          const val = Number(s.value) || 0;
+          if (s.paid) {
+            paidTc += val;
+            paidCount++;
+          } else {
+            pendingTc += val;
+            pendingCount++;
+          }
+          if (s.status === 'Concluído') completedCount++;
+        });
+
+        document.getElementById('statTcPending').textContent = pendingTc.toLocaleString('pt-BR') + ' TC';
+        document.getElementById('statCountPending').textContent = pendingCount + ' service(s) pendente(s)';
+        document.getElementById('statTcPaid').textContent = paidTc.toLocaleString('pt-BR') + ' TC';
+        document.getElementById('statCountPaid').textContent = paidCount + ' pagamento(s) confirmado(s)';
+        document.getElementById('statTcTotal').textContent = (pendingTc + paidTc).toLocaleString('pt-BR') + ' TC';
+        document.getElementById('statCompleted').textContent = completedCount + ' / ' + currentServices.length;
+        document.getElementById('badge-services').textContent = currentServices.length;
+
+        const filtered = currentServices.filter(function (s) {
+          if (currentServiceFilter === 'pending_pay') return !s.paid;
+          if (currentServiceFilter === 'paid') return s.paid;
+          if (currentServiceFilter === 'scheduled') return s.status === 'Agendado' || s.status === 'Em Andamento';
+          if (currentServiceFilter === 'done') return s.status === 'Concluído';
+          return true;
+        });
+
+        const tbody = document.getElementById('servicesTableBody');
+        const emptyMsg = document.getElementById('emptyServicesMsg');
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = '';
+          emptyMsg.classList.remove('hidden');
+          return;
+        }
+
+        emptyMsg.classList.add('hidden');
+        tbody.innerHTML = filtered.map(function (s) {
+          const statusStyles = {
+            'Agendado': 'bg-sky-500/15 text-sky-400 border-sky-500/30',
+            'Em Andamento': 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+            'Concluído': 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+          };
+          const formattedDate = s.date ? s.date.split('-').reverse().join('/') : '-';
+          const commentHtml = s.comment
+            ? '<div class="mt-1 flex items-start gap-1.5 text-xs text-slate-400"><span>💬 ' + escapeHTML(s.comment) + '</span></div>'
+            : '';
+
+          return '<tr class="hover:bg-obsidian-700/30 transition-colors">' +
+            '<td class="py-3.5 px-4"><div class="font-medium text-white">' + escapeHTML(s.name) + '</div>' + commentHtml + '</td>' +
+            '<td class="py-3.5 px-4 text-slate-300">' + escapeHTML(s.client) + '</td>' +
+            '<td class="py-3.5 px-4 text-slate-400 text-xs">' + formattedDate + '</td>' +
+            '<td class="py-3.5 px-4 font-bold text-gold-400">' + (Number(s.value) || 0).toLocaleString('pt-BR') + ' TC</td>' +
+            '<td class="py-3.5 px-4"><button type="button" data-action="status" data-id="' + s.id + '" class="px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer ' + (statusStyles[s.status] || statusStyles['Agendado']) + '">' + escapeHTML(s.status) + '</button></td>' +
+            '<td class="py-3.5 px-4"><button type="button" data-action="paid" data-id="' + s.id + '" class="px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer ' + (s.paid ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' : 'bg-rose-500/15 text-rose-400 border-rose-500/30') + '">' + (s.paid ? 'Pago' : 'Pendente') + '</button></td>' +
+            '<td class="py-3.5 px-4 text-right"><button type="button" data-action="delete" data-id="' + s.id + '" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer">🗑️</button></td>' +
+            '</tr>';
+        }).join('');
+      }
+
+      initFirebaseServices();
+    })();
   </script>
 </body>
 </html>
