@@ -52,8 +52,16 @@
 </head>
 <body class="bg-obsidian-900 text-slate-200 font-sans antialiased selection:bg-gold-500 selection:text-obsidian-950">
 
+  <!-- ==================== TELA DE CARREGAMENTO INICIAL ==================== -->
+  <div id="loadingScreen" class="min-h-screen flex flex-col items-center justify-center p-4 bg-obsidian-950">
+    <div class="w-12 h-12 rounded-xl gold-gradient flex items-center justify-center text-obsidian-950 shadow-lg shadow-amber-500/20 animate-pulse mb-3">
+      <i data-lucide="swords" class="w-7 h-7 stroke-[2.2]"></i>
+    </div>
+    <p class="text-xs text-slate-400 tracking-wider uppercase">Conectando ao servidor...</p>
+  </div>
+
   <!-- ==================== TELA DE LOGIN / CONEXÃO ==================== -->
-  <div id="authScreen" class="min-h-screen flex items-center justify-center p-4 bg-obsidian-950 relative overflow-hidden">
+  <div id="authScreen" class="min-h-screen flex items-center justify-center p-4 bg-obsidian-950 relative overflow-hidden hidden">
     <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gold-500/5 rounded-full blur-3xl pointer-events-none"></div>
     <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -63,7 +71,7 @@
           <i data-lucide="swords" class="w-8 h-8 stroke-[2.2]"></i>
         </div>
         <h1 class="font-rpg font-bold text-2xl text-gold-500 tracking-wider">TibiaTracker</h1>
-        <p class="text-xs text-slate-400 uppercase tracking-widest mt-1">& Services Manager</p>
+        <p class="text-xs text-slate-400 uppercase tracking-widest mt-1">& Services Manager • Nuvem</p>
       </div>
 
       <!-- Abas Login / Cadastro -->
@@ -82,8 +90,8 @@
       <!-- Form Login -->
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1.5">Usuário ou E-mail</label>
-          <input type="text" id="loginUser" required placeholder="Ex: mestre@tibia.com"
+          <label class="block text-xs font-medium text-slate-400 mb-1.5">E-mail</label>
+          <input type="email" id="loginEmail" required placeholder="seu@email.com"
             class="w-full bg-obsidian-950 border border-obsidian-600 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500">
         </div>
         <div>
@@ -91,7 +99,7 @@
           <input type="password" id="loginPass" required placeholder="••••••••"
             class="w-full bg-obsidian-950 border border-obsidian-600 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500">
         </div>
-        <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-obsidian-950 font-bold text-sm hover:opacity-95 transition-opacity shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
+        <button type="submit" id="btnLoginSubmit" class="w-full py-2.5 rounded-xl gold-gradient text-obsidian-950 font-bold text-sm hover:opacity-95 transition-opacity shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
           <i data-lucide="log-in" class="w-4 h-4"></i>
           Entrar no Painel
         </button>
@@ -105,27 +113,20 @@
             class="w-full bg-obsidian-950 border border-obsidian-600 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500">
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1.5">Usuário ou E-mail</label>
-          <input type="text" id="regUser" required placeholder="Ex: seu@email.com"
+          <label class="block text-xs font-medium text-slate-400 mb-1.5">E-mail</label>
+          <input type="email" id="regEmail" required placeholder="seu@email.com"
             class="w-full bg-obsidian-950 border border-obsidian-600 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500">
         </div>
         <div>
-          <label class="block text-xs font-medium text-slate-400 mb-1.5">Senha</label>
-          <input type="password" id="regPass" required placeholder="Crie uma senha"
+          <label class="block text-xs font-medium text-slate-400 mb-1.5">Senha (mínimo 6 caracteres)</label>
+          <input type="password" id="regPass" required minlength="6" placeholder="Mínimo 6 caracteres"
             class="w-full bg-obsidian-950 border border-obsidian-600 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500">
         </div>
-        <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-obsidian-950 font-bold text-sm hover:opacity-95 transition-opacity shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
+        <button type="submit" id="btnRegSubmit" class="w-full py-2.5 rounded-xl gold-gradient text-obsidian-950 font-bold text-sm hover:opacity-95 transition-opacity shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
           <i data-lucide="user-plus" class="w-4 h-4"></i>
           Criar Conta e Conectar
         </button>
       </form>
-
-      <div class="mt-6 pt-5 border-t border-obsidian-700 text-center">
-        <button type="button" onclick="loginDemo()" class="w-full py-2.5 px-4 rounded-xl bg-obsidian-800 hover:bg-obsidian-700 text-slate-300 hover:text-gold-400 border border-obsidian-600 text-xs font-medium transition-colors flex items-center justify-center gap-2">
-          <i data-lucide="sparkles" class="w-4 h-4 text-gold-400"></i>
-          Entrar com Conta Demo (Teste Rápido)
-        </button>
-      </div>
     </div>
   </div>
 
@@ -161,9 +162,10 @@
           </div>
           <div class="overflow-hidden">
             <p id="sidebarUserName" class="text-sm font-semibold text-white truncate">Mestre Tibiano</p>
-            <p class="text-xs text-emerald-400 flex items-center gap-1">
+            <p id="sidebarUserEmail" class="text-[11px] text-slate-400 truncate"></p>
+            <p class="text-xs text-emerald-400 flex items-center gap-1 mt-0.5">
               <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
-              Conta Conectada
+              Nuvem Sincronizada
             </p>
           </div>
         </div>
@@ -295,7 +297,7 @@
                 class="w-full bg-obsidian-950 border border-obsidian-600 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500">
             </div>
             <div class="flex items-end">
-              <button type="submit" class="w-full py-2.5 px-4 rounded-xl gold-gradient text-obsidian-950 font-bold text-sm hover:opacity-95 transition-opacity shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
+              <button type="submit" id="btnAddService" class="w-full py-2.5 px-4 rounded-xl gold-gradient text-obsidian-950 font-bold text-sm hover:opacity-95 transition-opacity shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
                 <i data-lucide="plus" class="w-4 h-4"></i>
                 Adicionar
               </button>
@@ -351,71 +353,53 @@
     </div>
   </div>
 
-  <script>
-    const STORAGE_USERS_KEY = 'tibiatracker_users_v2';
-    const STORAGE_SESSION_KEY = 'tibiatracker_session_v2';
+  <!-- ==================== FIREBASE SDK (AUTH + FIRESTORE) ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      updateProfile,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      doc,
+      setDoc,
+      updateDoc,
+      deleteDoc,
+      onSnapshot,
+      query,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Fallback em memória caso o navegador bloqueie localStorage
-    let memoryUsersDB = {};
-    let memorySession = null;
+    const firebaseConfig = {
+      apiKey: "AIzaSyCWhizAjYsl7_2QP8NI0zh9gbF-JhKCSu0",
+      authDomain: "tibia-tracker-a153d.firebaseapp.com",
+      projectId: "tibia-tracker-a153d",
+      storageBucket: "tibia-tracker-a153d.firebasestorage.app",
+      messagingSenderId: "360522982477",
+      appId: "1:360522982477:web:a42a33fc916b1f86496804"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
     let currentUser = null;
+    let currentServices = [];
     let currentServiceFilter = 'all';
+    let unsubscribeServices = null;
 
     function safeCreateIcons() {
       try {
         if (window.lucide && typeof window.lucide.createIcons === 'function') {
           window.lucide.createIcons();
         }
-      } catch (err) {
-        console.warn('Ícones não carregados:', err);
-      }
-    }
-
-    function getUsersDB() {
-      try {
-        const raw = localStorage.getItem(STORAGE_USERS_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && typeof parsed === 'object') {
-            memoryUsersDB = parsed;
-            return parsed;
-          }
-        }
-      } catch (e) {
-        console.warn('localStorage indisponível para leitura, usando memória:', e);
-      }
-      return memoryUsersDB;
-    }
-
-    function saveUsersDB(db) {
-      memoryUsersDB = db;
-      try {
-        localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(db));
-      } catch (e) {
-        console.warn('localStorage indisponível para gravação, salvo na sessão atual:', e);
-      }
-    }
-
-    function saveSession(username) {
-      memorySession = username;
-      try {
-        if (username) {
-          localStorage.setItem(STORAGE_SESSION_KEY, username);
-        } else {
-          localStorage.removeItem(STORAGE_SESSION_KEY);
-        }
-      } catch (e) {
-        console.warn('Erro ao salvar sessão no localStorage:', e);
-      }
-    }
-
-    function getSavedSession() {
-      try {
-        return localStorage.getItem(STORAGE_SESSION_KEY) || memorySession;
-      } catch (e) {
-        return memorySession;
-      }
+      } catch (e) {}
     }
 
     function escapeHTML(str) {
@@ -429,13 +413,23 @@
       })[m]);
     }
 
-    function createDefaultServices() {
-      const today = new Date().toISOString().split('T')[0];
-      return [
-        { id: 's1', name: 'Soul War Full Service', client: 'Knight Boladao', value: 2500, date: today, status: 'Agendado', paid: false, comment: 'Agendado para após o Server Save.' },
-        { id: 's2', name: 'Primal Ordeal (Magma Bubble)', client: 'Druida Healer', value: 1200, date: today, status: 'Em Andamento', paid: true, comment: 'Pago integralmente via Market.' },
-        { id: 's3', name: 'The Secret Library', client: 'Sorcerer Supremo', value: 900, date: today, status: 'Concluído', paid: true, comment: '' }
-      ];
+    function translateFirebaseError(code) {
+      switch (code) {
+        case 'auth/email-already-in-use':
+          return 'Este e-mail já está cadastrado. Tente conectar na aba "Conectar".';
+        case 'auth/invalid-email':
+          return 'Digite um endereço de e-mail válido.';
+        case 'auth/weak-password':
+          return 'A senha deve ter pelo menos 6 caracteres.';
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+        case 'auth/invalid-credential':
+          return 'E-mail ou senha incorretos.';
+        case 'auth/too-many-requests':
+          return 'Muitas tentativas seguidas. Aguarde alguns instantes e tente novamente.';
+        default:
+          return 'Erro de conexão com o servidor (' + code + ').';
+      }
     }
 
     function showAuthAlert(msg) {
@@ -464,11 +458,11 @@
       setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
-      }, 2800);
+      }, 3000);
     }
 
     // ==================== AUTENTICAÇÃO ====================
-    function switchAuthMode(mode) {
+    window.switchAuthMode = function(mode) {
       showAuthAlert('');
       const loginForm = document.getElementById('loginForm');
       const registerForm = document.getElementById('registerForm');
@@ -486,193 +480,207 @@
         tabReg.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all';
         tabLogin.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all';
       }
-    }
+    };
 
-    function handleRegister(e) {
+    window.handleRegister = async function(e) {
       e.preventDefault();
       showAuthAlert('');
-
+      const btn = document.getElementById('btnRegSubmit');
       const name = document.getElementById('regName').value.trim();
-      const username = document.getElementById('regUser').value.trim().toLowerCase();
+      const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPass').value;
 
-      if (!name || !username || !password) {
-        showAuthAlert('Preencha todos os campos para criar sua conta.');
-        return;
+      btn.disabled = true;
+      btn.textContent = 'Criando conta...';
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(cred.user, { displayName: name });
+        document.getElementById('sidebarUserName').textContent = name;
+        const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'TT';
+        document.getElementById('userAvatar').textContent = initials;
+        document.getElementById('registerForm').reset();
+        showToast(`Conta criada com sucesso, ${name}!`);
+      } catch (err) {
+        showAuthAlert(translateFirebaseError(err.code));
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="user-plus" class="w-4 h-4"></i> Criar Conta e Conectar';
+        safeCreateIcons();
       }
+    };
 
-      const db = getUsersDB();
-      if (db[username]) {
-        showAuthAlert('Este usuário ou e-mail já está cadastrado. Tente conectar ou use outro.');
-        showToast('Este usuário/e-mail já está cadastrado.', 'error');
-        return;
-      }
-
-      db[username] = {
-        name,
-        username,
-        password,
-        services: []
-      };
-
-      saveUsersDB(db);
-      saveSession(username);
-      currentUser = username;
-
-      document.getElementById('registerForm').reset();
-      enterApp();
-      showToast(`Conta de ${name} criada e conectada!`);
-    }
-
-    function handleLogin(e) {
+    window.handleLogin = async function(e) {
       e.preventDefault();
       showAuthAlert('');
-
-      const username = document.getElementById('loginUser').value.trim().toLowerCase();
+      const btn = document.getElementById('btnLoginSubmit');
+      const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPass').value;
 
-      const db = getUsersDB();
-      if (!db[username] || db[username].password !== password) {
-        showAuthAlert('Usuário ou senha incorretos.');
-        showToast('Usuário ou senha incorretos.', 'error');
-        return;
+      btn.disabled = true;
+      btn.textContent = 'Conectando...';
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        document.getElementById('loginForm').reset();
+        showToast('Conectado com sucesso!');
+      } catch (err) {
+        showAuthAlert(translateFirebaseError(err.code));
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="log-in" class="w-4 h-4"></i> Entrar no Painel';
+        safeCreateIcons();
       }
+    };
 
-      saveSession(username);
-      currentUser = username;
-      document.getElementById('loginForm').reset();
-      enterApp();
-      showToast(`Bem-vindo de volta, ${db[username].name}!`);
-    }
-
-    function loginDemo() {
-      showAuthAlert('');
-      const db = getUsersDB();
-      if (!db['demo']) {
-        db['demo'] = {
-          name: 'Mestre Tibiano',
-          username: 'demo',
-          password: '123',
-          services: createDefaultServices()
-        };
-        saveUsersDB(db);
+    window.logoutUser = async function() {
+      try {
+        if (unsubscribeServices) {
+          unsubscribeServices();
+          unsubscribeServices = null;
+        }
+        await signOut(auth);
+        showToast('Sessão encerrada.');
+      } catch (err) {
+        showToast('Erro ao desconectar.', 'error');
       }
-      saveSession('demo');
-      currentUser = 'demo';
-      enterApp();
-      showToast('Conectado na conta Demo!');
-    }
+    };
 
-    function logoutUser() {
-      saveSession(null);
-      currentUser = null;
-      document.getElementById('appShell').classList.add('hidden');
-      document.getElementById('authScreen').classList.remove('hidden');
-      showToast('Sessão encerrada.');
-    }
+    onAuthStateChanged(auth, (user) => {
+      document.getElementById('loadingScreen').classList.add('hidden');
+      currentUser = user;
 
-    function enterApp() {
-      const db = getUsersDB();
-      const userData = db[currentUser];
-      if (!userData) {
-        logoutUser();
-        return;
+      if (user) {
+        const displayName = user.displayName || user.email.split('@')[0];
+        document.getElementById('sidebarUserName').textContent = displayName;
+        document.getElementById('sidebarUserEmail').textContent = user.email;
+        const initials = displayName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'TT';
+        document.getElementById('userAvatar').textContent = initials;
+
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('appShell').classList.remove('hidden');
+
+        const dateInput = document.getElementById('srvDate');
+        if (dateInput && !dateInput.value) {
+          dateInput.value = new Date().toISOString().split('T')[0];
+        }
+
+        listenUserServices(user.uid);
+      } else {
+        currentServices = [];
+        document.getElementById('appShell').classList.add('hidden');
+        document.getElementById('authScreen').classList.remove('hidden');
       }
-
-      if (!Array.isArray(userData.services)) {
-        userData.services = [];
-        saveUsersDB(db);
-      }
-
-      document.getElementById('sidebarUserName').textContent = userData.name;
-      const initials = userData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'TT';
-      document.getElementById('userAvatar').textContent = initials;
-
-      document.getElementById('authScreen').classList.add('hidden');
-      document.getElementById('appShell').classList.remove('hidden');
-
-      const dateInput = document.getElementById('srvDate');
-      if (dateInput && !dateInput.value) {
-        dateInput.value = new Date().toISOString().split('T')[0];
-      }
-
-      renderServices();
       safeCreateIcons();
+    });
+
+    // ==================== FIRESTORE TEMPO REAL ====================
+    function listenUserServices(uid) {
+      if (unsubscribeServices) unsubscribeServices();
+
+      const servicesRef = collection(db, 'users', uid, 'services');
+      const q = query(servicesRef, orderBy('createdAt', 'desc'));
+
+      unsubscribeServices = onSnapshot(q, (snapshot) => {
+        currentServices = snapshot.docs.map(d => ({
+          id: d.id,
+          ...d.data()
+        }));
+        renderServices();
+      }, (error) => {
+        console.error('Erro ao ler Firestore:', error);
+        showToast('Erro ao sincronizar dados com o banco.', 'error');
+      });
     }
 
-    // ==================== SIDEBAR MOBILE ====================
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      sidebar.classList.toggle('-translate-x-full');
-      overlay.classList.toggle('hidden');
-    }
-
-    // ==================== CONTROLE DE SERVICES ====================
-    function addService(e) {
+    window.addService = async function(e) {
       e.preventDefault();
+      if (!currentUser) return;
+
+      const btn = document.getElementById('btnAddService');
       const name = document.getElementById('srvName').value.trim();
       const client = document.getElementById('srvClient').value.trim();
       const value = parseInt(document.getElementById('srvValue').value, 10) || 0;
       const date = document.getElementById('srvDate').value;
       const comment = document.getElementById('srvComment').value.trim();
 
-      const db = getUsersDB();
-      if (!db[currentUser]) return;
+      btn.disabled = true;
+      try {
+        const newId = 'srv_' + Date.now();
+        const docRef = doc(db, 'users', currentUser.uid, 'services', newId);
+        await setDoc(docRef, {
+          name,
+          client,
+          value,
+          date,
+          comment,
+          status: 'Agendado',
+          paid: false,
+          createdAt: Date.now()
+        });
 
-      db[currentUser].services.unshift({
-        id: 'srv_' + Date.now(),
-        name,
-        client,
-        value,
-        date,
-        comment,
-        status: 'Agendado',
-        paid: false
-      });
-      saveUsersDB(db);
+        document.getElementById('srvName').value = '';
+        document.getElementById('srvClient').value = '';
+        document.getElementById('srvValue').value = '';
+        document.getElementById('srvComment').value = '';
+        showToast('Service salvo na nuvem!');
+      } catch (err) {
+        console.error(err);
+        showToast('Erro ao salvar service no banco.', 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    };
 
-      document.getElementById('srvName').value = '';
-      document.getElementById('srvClient').value = '';
-      document.getElementById('srvValue').value = '';
-      document.getElementById('srvComment').value = '';
-
-      renderServices();
-      showToast('Service adicionado com sucesso!');
-    }
-
-    function cycleServiceStatus(id) {
+    window.cycleServiceStatus = async function(id) {
+      if (!currentUser) return;
       const order = ['Agendado', 'Em Andamento', 'Concluído'];
-      const db = getUsersDB();
-      const srv = db[currentUser]?.services.find(s => s.id === id);
-      if (srv) {
-        const nextIdx = (order.indexOf(srv.status) + 1) % order.length;
-        srv.status = order[nextIdx];
-        saveUsersDB(db);
-        renderServices();
+      const srv = currentServices.find(s => s.id === id);
+      if (!srv) return;
+
+      const nextStatus = order[(order.indexOf(srv.status) + 1) % order.length];
+      try {
+        await updateDoc(doc(db, 'users', currentUser.uid, 'services', id), {
+          status: nextStatus
+        });
+      } catch (err) {
+        showToast('Erro ao atualizar status.', 'error');
       }
-    }
+    };
 
-    function toggleServicePaid(id) {
-      const db = getUsersDB();
-      const srv = db[currentUser]?.services.find(s => s.id === id);
-      if (srv) {
-        srv.paid = !srv.paid;
-        saveUsersDB(db);
-        renderServices();
+    window.toggleServicePaid = async function(id) {
+      if (!currentUser) return;
+      const srv = currentServices.find(s => s.id === id);
+      if (!srv) return;
+
+      try {
+        await updateDoc(doc(db, 'users', currentUser.uid, 'services', id), {
+          paid: !srv.paid
+        });
+      } catch (err) {
+        showToast('Erro ao atualizar pagamento.', 'error');
       }
-    }
+    };
 
-    function deleteService(id) {
-      const db = getUsersDB();
-      if (!db[currentUser]) return;
-      db[currentUser].services = db[currentUser].services.filter(s => s.id !== id);
-      saveUsersDB(db);
-      renderServices();
-      showToast('Service removido.');
-    }
+    window.deleteService = async function(id) {
+      if (!currentUser) return;
+      try {
+        await deleteDoc(doc(db, 'users', currentUser.uid, 'services', id));
+        showToast('Service removido.');
+      } catch (err) {
+        showToast('Erro ao excluir service.', 'error');
+      }
+    };
 
-    function setServiceFilter(filter) {
+    // ==================== FILTROS E RENDERIZAÇÃO ====================
+    window.toggleSidebar = function() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('hidden');
+    };
+
+    window.setServiceFilter = function(filter) {
       currentServiceFilter = filter;
       document.querySelectorAll('.srv-filter-btn').forEach(btn => {
         btn.className = 'srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white';
@@ -682,22 +690,20 @@
         activeBtn.className = 'srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30';
       }
       renderServices();
-    }
+    };
 
     function renderServices() {
-      const db = getUsersDB();
-      const services = db[currentUser]?.services || [];
-
       let pendingTc = 0, pendingCount = 0;
       let paidTc = 0, paidCount = 0;
       let completedCount = 0;
 
-      services.forEach(s => {
+      currentServices.forEach(s => {
+        const val = Number(s.value) || 0;
         if (s.paid) {
-          paidTc += s.value;
+          paidTc += val;
           paidCount++;
         } else {
-          pendingTc += s.value;
+          pendingTc += val;
           pendingCount++;
         }
         if (s.status === 'Concluído') completedCount++;
@@ -708,10 +714,10 @@
       document.getElementById('statTcPaid').textContent = `${paidTc.toLocaleString('pt-BR')} TC`;
       document.getElementById('statCountPaid').textContent = `${paidCount} pagamento(s) confirmado(s)`;
       document.getElementById('statTcTotal').textContent = `${(pendingTc + paidTc).toLocaleString('pt-BR')} TC`;
-      document.getElementById('statCompleted').textContent = `${completedCount} / ${services.length}`;
-      document.getElementById('badge-services').textContent = services.length;
+      document.getElementById('statCompleted').textContent = `${completedCount} / ${currentServices.length}`;
+      document.getElementById('badge-services').textContent = currentServices.length;
 
-      const filtered = services.filter(s => {
+      const filtered = currentServices.filter(s => {
         if (currentServiceFilter === 'pending_pay') return !s.paid;
         if (currentServiceFilter === 'paid') return s.paid;
         if (currentServiceFilter === 'scheduled') return s.status === 'Agendado' || s.status === 'Em Andamento';
@@ -748,11 +754,11 @@
             </td>
             <td class="py-3.5 px-4 text-slate-300">${escapeHTML(s.client)}</td>
             <td class="py-3.5 px-4 text-slate-400 text-xs">${formattedDate}</td>
-            <td class="py-3.5 px-4 font-bold text-gold-400">${s.value.toLocaleString('pt-BR')} TC</td>
+            <td class="py-3.5 px-4 font-bold text-gold-400">${(Number(s.value) || 0).toLocaleString('pt-BR')} TC</td>
             <td class="py-3.5 px-4">
               <button type="button" onclick="cycleServiceStatus('${s.id}')" title="Clique para alternar status"
                 class="px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all ${statusStyles[s.status] || statusStyles['Agendado']}">
-                ${s.status}
+                ${escapeHTML(s.status)}
               </button>
             </td>
             <td class="py-3.5 px-4">
@@ -774,17 +780,7 @@
       safeCreateIcons();
     }
 
-    // ==================== INICIALIZAÇÃO ====================
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedSession = getSavedSession();
-      const db = getUsersDB();
-      if (savedSession && db[savedSession]) {
-        currentUser = savedSession;
-        enterApp();
-      } else {
-        safeCreateIcons();
-      }
-    });
+    safeCreateIcons();
   </script>
 </body>
 </html>
