@@ -55,7 +55,7 @@
   <!-- ==================== TELA DE CARREGAMENTO INICIAL ==================== -->
   <div id="loadingScreen" class="min-h-screen flex flex-col items-center justify-center p-4 bg-obsidian-950">
     <div class="w-12 h-12 rounded-xl gold-gradient flex items-center justify-center text-obsidian-950 shadow-lg shadow-amber-500/20 animate-pulse mb-3">
-      <i data-lucide="swords" class="w-7 h-7 stroke-[2.2]"></i>
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/><line x1="19" y1="21" x2="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" y1="14" x2="9" y2="18"/><line x1="7" y1="17" x2="4" y2="20"/><line x1="3" y1="19" x2="5" y2="21"/></svg>
     </div>
     <p class="text-xs text-slate-400 tracking-wider uppercase">Conectando ao servidor...</p>
   </div>
@@ -353,9 +353,64 @@
     </div>
   </div>
 
+  <!-- Fallback de segurança caso o script externo demore -->
+  <script>
+    window._firebaseLoaded = false;
+
+    function safeCreateIcons() {
+      try {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      } catch (e) {}
+    }
+
+    function showAuthAlert(msg) {
+      const el = document.getElementById('authAlert');
+      if (!el) return;
+      if (!msg) {
+        el.classList.add('hidden');
+        el.textContent = '';
+      } else {
+        el.textContent = msg;
+        el.classList.remove('hidden');
+      }
+    }
+
+    window.switchAuthMode = function(mode) {
+      showAuthAlert('');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const tabLogin = document.getElementById('tabAuthLogin');
+      const tabReg = document.getElementById('tabAuthRegister');
+
+      if (mode === 'login') {
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        tabLogin.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all';
+        tabReg.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all';
+      } else {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        tabReg.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all';
+        tabLogin.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all';
+      }
+    };
+
+    // Destrava a tela caso o Firebase demore mais de 3 segundos para carregar
+    setTimeout(() => {
+      if (!window._firebaseLoaded) {
+        document.getElementById('loadingScreen').classList.add('hidden');
+        document.getElementById('authScreen').classList.remove('hidden');
+        showAuthAlert('Não foi possível conectar ao Firebase. Verifique se há algum bloqueador de anúncios ativo ou recarregue a página.');
+        safeCreateIcons();
+      }
+    }, 3000);
+  </script>
+
   <!-- ==================== FIREBASE SDK (AUTH + FIRESTORE) ==================== -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
     import {
       getAuth,
       createUserWithEmailAndPassword,
@@ -363,7 +418,7 @@
       updateProfile,
       signOut,
       onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
     import {
       getFirestore,
       collection,
@@ -374,7 +429,7 @@
       onSnapshot,
       query,
       orderBy
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCWhizAjYsl7_2QP8NI0zh9gbF-JhKCSu0",
@@ -388,28 +443,21 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    window._firebaseLoaded = true;
 
     let currentUser = null;
     let currentServices = [];
     let currentServiceFilter = 'all';
     let unsubscribeServices = null;
 
-    function safeCreateIcons() {
-      try {
-        if (window.lucide && typeof window.lucide.createIcons === 'function') {
-          window.lucide.createIcons();
-        }
-      } catch (e) {}
-    }
-
     function escapeHTML(str) {
       if (!str) return '';
       return String(str).replace(/[&<>"']/g, m => ({
-        '&': '&',
-        '<': '<',
-        '>': '>',
-        '"': '"',
-        "'": '''
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
       })[m]);
     }
 
@@ -425,22 +473,14 @@
         case 'auth/wrong-password':
         case 'auth/invalid-credential':
           return 'E-mail ou senha incorretos.';
+        case 'auth/unauthorized-domain':
+          return 'Domínio não autorizado no Firebase! Adicione hugolimaslv.github.io em Authentication > Settings > Authorized domains.';
+        case 'auth/operation-not-allowed':
+          return 'Login por E-mail/Senha não ativado no painel do Firebase.';
         case 'auth/too-many-requests':
           return 'Muitas tentativas seguidas. Aguarde alguns instantes e tente novamente.';
         default:
           return 'Erro de conexão com o servidor (' + code + ').';
-      }
-    }
-
-    function showAuthAlert(msg) {
-      const el = document.getElementById('authAlert');
-      if (!el) return;
-      if (!msg) {
-        el.classList.add('hidden');
-        el.textContent = '';
-      } else {
-        el.textContent = msg;
-        el.classList.remove('hidden');
       }
     }
 
@@ -462,26 +502,6 @@
     }
 
     // ==================== AUTENTICAÇÃO ====================
-    window.switchAuthMode = function(mode) {
-      showAuthAlert('');
-      const loginForm = document.getElementById('loginForm');
-      const registerForm = document.getElementById('registerForm');
-      const tabLogin = document.getElementById('tabAuthLogin');
-      const tabReg = document.getElementById('tabAuthRegister');
-
-      if (mode === 'login') {
-        loginForm.classList.remove('hidden');
-        registerForm.classList.add('hidden');
-        tabLogin.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all';
-        tabReg.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all';
-      } else {
-        loginForm.classList.add('hidden');
-        registerForm.classList.remove('hidden');
-        tabReg.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all';
-        tabLogin.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all';
-      }
-    };
-
     window.handleRegister = async function(e) {
       e.preventDefault();
       showAuthAlert('');
@@ -548,6 +568,7 @@
 
     onAuthStateChanged(auth, (user) => {
       document.getElementById('loadingScreen').classList.add('hidden');
+      showAuthAlert('');
       currentUser = user;
 
       if (user) {
@@ -589,7 +610,7 @@
         renderServices();
       }, (error) => {
         console.error('Erro ao ler Firestore:', error);
-        showToast('Erro ao sincronizar dados com o banco.', 'error');
+        showToast('Erro ao sincronizar dados: ' + error.code, 'error');
       });
     }
 
@@ -626,7 +647,7 @@
         showToast('Service salvo na nuvem!');
       } catch (err) {
         console.error(err);
-        showToast('Erro ao salvar service no banco.', 'error');
+        showToast('Erro ao salvar service: ' + err.code, 'error');
       } finally {
         btn.disabled = false;
       }
