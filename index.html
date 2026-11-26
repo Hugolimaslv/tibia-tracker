@@ -12,6 +12,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Firebase SDK Compat (Mais estável para GitHub Pages) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -52,16 +57,8 @@
 </head>
 <body class="bg-obsidian-900 text-slate-200 font-sans antialiased selection:bg-gold-500 selection:text-obsidian-950">
 
-  <!-- ==================== TELA DE CARREGAMENTO INICIAL ==================== -->
-  <div id="loadingScreen" class="min-h-screen flex flex-col items-center justify-center p-4 bg-obsidian-950">
-    <div class="w-12 h-12 rounded-xl gold-gradient flex items-center justify-center text-obsidian-950 shadow-lg shadow-amber-500/20 animate-pulse mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/><line x1="19" y1="21" x2="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" y1="14" x2="9" y2="18"/><line x1="7" y1="17" x2="4" y2="20"/><line x1="3" y1="19" x2="5" y2="21"/></svg>
-    </div>
-    <p class="text-xs text-slate-400 tracking-wider uppercase">Conectando ao servidor...</p>
-  </div>
-
   <!-- ==================== TELA DE LOGIN / CONEXÃO ==================== -->
-  <div id="authScreen" class="min-h-screen flex items-center justify-center p-4 bg-obsidian-950 relative overflow-hidden hidden">
+  <div id="authScreen" class="min-h-screen flex items-center justify-center p-4 bg-obsidian-950 relative overflow-hidden">
     <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gold-500/5 rounded-full blur-3xl pointer-events-none"></div>
     <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -353,9 +350,22 @@
     </div>
   </div>
 
-  <!-- Fallback de segurança caso o script externo demore -->
   <script>
-    window._firebaseLoaded = false;
+    const firebaseConfig = {
+      apiKey: "AIzaSyCWhizAjYsl7_2QP8NI0zh9gbF-JhKCSu0",
+      authDomain: "tibia-tracker-a153d.firebaseapp.com",
+      projectId: "tibia-tracker-a153d",
+      storageBucket: "tibia-tracker-a153d.firebasestorage.app",
+      messagingSenderId: "360522982477",
+      appId: "1:360522982477:web:a42a33fc916b1f86496804"
+    };
+
+    let auth = null;
+    let db = null;
+    let currentUser = null;
+    let currentServices = [];
+    let currentServiceFilter = 'all';
+    let unsubscribeServices = null;
 
     function safeCreateIcons() {
       try {
@@ -363,6 +373,17 @@
           window.lucide.createIcons();
         }
       } catch (e) {}
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&',
+        '<': '<',
+        '>': '>',
+        '"': '"',
+        "'": '''
+      })[m]);
     }
 
     function showAuthAlert(msg) {
@@ -377,87 +398,21 @@
       }
     }
 
-    window.switchAuthMode = function(mode) {
-      showAuthAlert('');
-      const loginForm = document.getElementById('loginForm');
-      const registerForm = document.getElementById('registerForm');
-      const tabLogin = document.getElementById('tabAuthLogin');
-      const tabReg = document.getElementById('tabAuthRegister');
-
-      if (mode === 'login') {
-        loginForm.classList.remove('hidden');
-        registerForm.classList.add('hidden');
-        tabLogin.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all';
-        tabReg.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all';
-      } else {
-        loginForm.classList.add('hidden');
-        registerForm.classList.remove('hidden');
-        tabReg.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all';
-        tabLogin.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all';
-      }
-    };
-
-    setTimeout(() => {
-      if (!window._firebaseLoaded) {
-        document.getElementById('loadingScreen').classList.add('hidden');
-        document.getElementById('authScreen').classList.remove('hidden');
-        showAuthAlert('Não foi possível conectar ao Firebase. Verifique se há algum bloqueador de anúncios ativo ou recarregue a página.');
-        safeCreateIcons();
-      }
-    }, 3000);
-  </script>
-
-  <!-- ==================== FIREBASE SDK (AUTH + FIRESTORE) ==================== -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      updateProfile,
-      signOut,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      doc,
-      setDoc,
-      updateDoc,
-      deleteDoc,
-      onSnapshot,
-      query,
-      orderBy
-    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCWhizAjYsl7_2QP8NI0zh9gbF-JhKCSu0",
-      authDomain: "tibia-tracker-a153d.firebaseapp.com",
-      projectId: "tibia-tracker-a153d",
-      storageBucket: "tibia-tracker-a153d.firebasestorage.app",
-      messagingSenderId: "360522982477",
-      appId: "1:360522982477:web:a42a33fc916b1f86496804"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    window._firebaseLoaded = true;
-
-    let currentUser = null;
-    let currentServices = [];
-    let currentServiceFilter = 'all';
-    let unsubscribeServices = null;
-
-    function escapeHTML(str) {
-      if (!str) return '';
-      return String(str).replace(/[&<>"']/g, m => ({
-        '&': '&',
-        '<': '<',
-        '>': '>',
-        '"': '"',
-        "'": '''
-      })[m]);
+    function showToast(msg, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      const colors = type === 'error'
+        ? 'bg-rose-950/95 border-rose-500/40 text-rose-200'
+        : 'bg-obsidian-800/95 border-gold-500/40 text-gold-300';
+      toast.className = `px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 ${colors}`;
+      toast.innerHTML = `<i data-lucide="${type === 'error' ? 'alert-circle' : 'check-circle'}" class="w-4 h-4 shrink-0"></i><span>${escapeHTML(msg)}</span>`;
+      container.appendChild(toast);
+      safeCreateIcons();
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
     }
 
     function translateFirebaseError(code) {
@@ -479,30 +434,80 @@
         case 'auth/too-many-requests':
           return 'Muitas tentativas seguidas. Aguarde alguns instantes e tente novamente.';
         default:
-          return 'Erro de conexão com o servidor (' + code + ').';
+          return 'Erro: ' + (code || 'Falha de comunicação com o Firebase.');
       }
     }
 
-    function showToast(msg, type = 'success') {
-      const container = document.getElementById('toastContainer');
-      if (!container) return;
-      const toast = document.createElement('div');
-      const colors = type === 'error'
-        ? 'bg-rose-950/95 border-rose-500/40 text-rose-200'
-        : 'bg-obsidian-800/95 border-gold-500/40 text-gold-300';
-      toast.className = `px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 ${colors}`;
-      toast.innerHTML = `<i data-lucide="${type === 'error' ? 'alert-circle' : 'check-circle'}" class="w-4 h-4 shrink-0"></i><span>${escapeHTML(msg)}</span>`;
-      container.appendChild(toast);
-      safeCreateIcons();
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
+    // ==================== INICIALIZAÇÃO DO FIREBASE ====================
+    try {
+      if (typeof firebase === 'undefined') {
+        showAuthAlert('O navegador ou uma extensão (AdBlock/Brave) bloqueou o script do Firebase (gstatic.com). Desative o bloqueador para este site e recarregue.');
+      } else {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        auth = firebase.auth();
+        db = firebase.firestore();
+
+        auth.onAuthStateChanged((user) => {
+          showAuthAlert('');
+          currentUser = user;
+
+          if (user) {
+            const displayName = user.displayName || user.email.split('@')[0];
+            document.getElementById('sidebarUserName').textContent = displayName;
+            document.getElementById('sidebarUserEmail').textContent = user.email;
+            const initials = displayName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'TT';
+            document.getElementById('userAvatar').textContent = initials;
+
+            document.getElementById('authScreen').classList.add('hidden');
+            document.getElementById('appShell').classList.remove('hidden');
+
+            const dateInput = document.getElementById('srvDate');
+            if (dateInput && !dateInput.value) {
+              dateInput.value = new Date().toISOString().split('T')[0];
+            }
+
+            listenUserServices(user.uid);
+          } else {
+            currentServices = [];
+            document.getElementById('appShell').classList.add('hidden');
+            document.getElementById('authScreen').classList.remove('hidden');
+          }
+          safeCreateIcons();
+        });
+      }
+    } catch (initErr) {
+      showAuthAlert('Erro ao iniciar Firebase: ' + initErr.message);
     }
 
     // ==================== AUTENTICAÇÃO ====================
-    window.handleRegister = async function(e) {
+    function switchAuthMode(mode) {
+      showAuthAlert('');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const tabLogin = document.getElementById('tabAuthLogin');
+      const tabReg = document.getElementById('tabAuthRegister');
+
+      if (mode === 'login') {
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        tabLogin.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all';
+        tabReg.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all';
+      } else {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        tabReg.className = 'py-2 text-xs font-semibold rounded-lg bg-gold-500/15 text-gold-400 border border-gold-500/30 transition-all';
+        tabLogin.className = 'py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all';
+      }
+    }
+
+    async function handleRegister(e) {
       e.preventDefault();
+      if (!auth) {
+        showAuthAlert('Firebase bloqueado pelo navegador. Desative o AdBlock/extensões e recarregue.');
+        return;
+      }
       showAuthAlert('');
       const btn = document.getElementById('btnRegSubmit');
       const name = document.getElementById('regName').value.trim();
@@ -513,8 +518,8 @@
       btn.textContent = 'Criando conta...';
 
       try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        await updateProfile(cred.user, { displayName: name });
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+        await cred.user.updateProfile({ displayName: name });
         document.getElementById('sidebarUserName').textContent = name;
         const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'TT';
         document.getElementById('userAvatar').textContent = initials;
@@ -527,10 +532,14 @@
         btn.innerHTML = '<i data-lucide="user-plus" class="w-4 h-4"></i> Criar Conta e Conectar';
         safeCreateIcons();
       }
-    };
+    }
 
-    window.handleLogin = async function(e) {
+    async function handleLogin(e) {
       e.preventDefault();
+      if (!auth) {
+        showAuthAlert('Firebase bloqueado pelo navegador. Desative o AdBlock/extensões e recarregue.');
+        return;
+      }
       showAuthAlert('');
       const btn = document.getElementById('btnLoginSubmit');
       const email = document.getElementById('loginEmail').value.trim();
@@ -540,7 +549,7 @@
       btn.textContent = 'Conectando...';
 
       try {
-        await signInWithEmailAndPassword(auth, email, password);
+        await auth.signInWithEmailAndPassword(email, password);
         document.getElementById('loginForm').reset();
         showToast('Conectado com sucesso!');
       } catch (err) {
@@ -550,72 +559,43 @@
         btn.innerHTML = '<i data-lucide="log-in" class="w-4 h-4"></i> Entrar no Painel';
         safeCreateIcons();
       }
-    };
+    }
 
-    window.logoutUser = async function() {
+    async function logoutUser() {
       try {
         if (unsubscribeServices) {
           unsubscribeServices();
           unsubscribeServices = null;
         }
-        await signOut(auth);
+        if (auth) await auth.signOut();
         showToast('Sessão encerrada.');
       } catch (err) {
         showToast('Erro ao desconectar.', 'error');
       }
-    };
-
-    onAuthStateChanged(auth, (user) => {
-      document.getElementById('loadingScreen').classList.add('hidden');
-      showAuthAlert('');
-      currentUser = user;
-
-      if (user) {
-        const displayName = user.displayName || user.email.split('@')[0];
-        document.getElementById('sidebarUserName').textContent = displayName;
-        document.getElementById('sidebarUserEmail').textContent = user.email;
-        const initials = displayName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'TT';
-        document.getElementById('userAvatar').textContent = initials;
-
-        document.getElementById('authScreen').classList.add('hidden');
-        document.getElementById('appShell').classList.remove('hidden');
-
-        const dateInput = document.getElementById('srvDate');
-        if (dateInput && !dateInput.value) {
-          dateInput.value = new Date().toISOString().split('T')[0];
-        }
-
-        listenUserServices(user.uid);
-      } else {
-        currentServices = [];
-        document.getElementById('appShell').classList.add('hidden');
-        document.getElementById('authScreen').classList.remove('hidden');
-      }
-      safeCreateIcons();
-    });
+    }
 
     // ==================== FIRESTORE TEMPO REAL ====================
     function listenUserServices(uid) {
+      if (!db) return;
       if (unsubscribeServices) unsubscribeServices();
 
-      const servicesRef = collection(db, 'users', uid, 'services');
-      const q = query(servicesRef, orderBy('createdAt', 'desc'));
-
-      unsubscribeServices = onSnapshot(q, (snapshot) => {
-        currentServices = snapshot.docs.map(d => ({
-          id: d.id,
-          ...d.data()
-        }));
-        renderServices();
-      }, (error) => {
-        console.error('Erro ao ler Firestore:', error);
-        showToast('Erro ao sincronizar dados: ' + error.code, 'error');
-      });
+      unsubscribeServices = db.collection('users').doc(uid).collection('services')
+        .orderBy('createdAt', 'desc')
+        .onSnapshot((snapshot) => {
+          currentServices = snapshot.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+          }));
+          renderServices();
+        }, (error) => {
+          console.error('Erro ao ler Firestore:', error);
+          showToast('Erro no banco de dados: ' + error.code, 'error');
+        });
     }
 
-    window.addService = async function(e) {
+    async function addService(e) {
       e.preventDefault();
-      if (!currentUser) return;
+      if (!currentUser || !db) return;
 
       const btn = document.getElementById('btnAddService');
       const name = document.getElementById('srvName').value.trim();
@@ -627,8 +607,7 @@
       btn.disabled = true;
       try {
         const newId = 'srv_' + Date.now();
-        const docRef = doc(db, 'users', currentUser.uid, 'services', newId);
-        await setDoc(docRef, {
+        await db.collection('users').doc(currentUser.uid).collection('services').doc(newId).set({
           name,
           client,
           value,
@@ -650,57 +629,57 @@
       } finally {
         btn.disabled = false;
       }
-    };
+    }
 
-    window.cycleServiceStatus = async function(id) {
-      if (!currentUser) return;
+    async function cycleServiceStatus(id) {
+      if (!currentUser || !db) return;
       const order = ['Agendado', 'Em Andamento', 'Concluído'];
       const srv = currentServices.find(s => s.id === id);
       if (!srv) return;
 
       const nextStatus = order[(order.indexOf(srv.status) + 1) % order.length];
       try {
-        await updateDoc(doc(db, 'users', currentUser.uid, 'services', id), {
+        await db.collection('users').doc(currentUser.uid).collection('services').doc(id).update({
           status: nextStatus
         });
       } catch (err) {
         showToast('Erro ao atualizar status.', 'error');
       }
-    };
+    }
 
-    window.toggleServicePaid = async function(id) {
-      if (!currentUser) return;
+    async function toggleServicePaid(id) {
+      if (!currentUser || !db) return;
       const srv = currentServices.find(s => s.id === id);
       if (!srv) return;
 
       try {
-        await updateDoc(doc(db, 'users', currentUser.uid, 'services', id), {
+        await db.collection('users').doc(currentUser.uid).collection('services').doc(id).update({
           paid: !srv.paid
         });
       } catch (err) {
         showToast('Erro ao atualizar pagamento.', 'error');
       }
-    };
+    }
 
-    window.deleteService = async function(id) {
-      if (!currentUser) return;
+    async function deleteService(id) {
+      if (!currentUser || !db) return;
       try {
-        await deleteDoc(doc(db, 'users', currentUser.uid, 'services', id));
+        await db.collection('users').doc(currentUser.uid).collection('services').doc(id).delete();
         showToast('Service removido.');
       } catch (err) {
         showToast('Erro ao excluir service.', 'error');
       }
-    };
+    }
 
     // ==================== FILTROS E RENDERIZAÇÃO ====================
-    window.toggleSidebar = function() {
+    function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('sidebarOverlay');
       sidebar.classList.toggle('-translate-x-full');
       overlay.classList.toggle('hidden');
-    };
+    }
 
-    window.setServiceFilter = function(filter) {
+    function setServiceFilter(filter) {
       currentServiceFilter = filter;
       document.querySelectorAll('.srv-filter-btn').forEach(btn => {
         btn.className = 'srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-obsidian-900 text-slate-400 border border-obsidian-600 hover:text-white';
@@ -710,7 +689,7 @@
         activeBtn.className = 'srv-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30';
       }
       renderServices();
-    };
+    }
 
     function renderServices() {
       let pendingTc = 0, pendingCount = 0;
