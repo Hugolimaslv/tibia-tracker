@@ -297,6 +297,11 @@
                 Adicionar
               </button>
             </div>
+            <div class="sm:col-span-2 lg:col-span-6">
+              <label class="block text-xs text-slate-400 mb-1">Comentários / Observações (opcional)</label>
+              <input type="text" id="srvComment" placeholder="Ex: Pagou 50% adiantado, falta fazer acesso, horário após SS..."
+                class="w-full bg-obsidian-950 border border-obsidian-600 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-gold-500">
+            </div>
           </form>
         </div>
 
@@ -320,7 +325,7 @@
             <table class="w-full text-left border-collapse">
               <thead>
                 <tr class="border-b border-obsidian-700 text-[11px] uppercase tracking-wider text-slate-400">
-                  <th class="py-3 px-4">Service</th>
+                  <th class="py-3 px-4">Service & Comentários</th>
                   <th class="py-3 px-4">Cliente</th>
                   <th class="py-3 px-4">Data</th>
                   <th class="py-3 px-4">Valor</th>
@@ -362,12 +367,23 @@
       localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(db));
     }
 
+    function escapeHTML(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, m => ({
+        '&': '&',
+        '<': '<',
+        '>': '>',
+        '"': '"',
+        "'": '''
+      })[m]);
+    }
+
     function createDefaultServices() {
       const today = new Date().toISOString().split('T')[0];
       return [
-        { id: 's1', name: 'Soul War Full Service', client: 'Knight Boladao', value: 2500, date: today, status: 'Agendado', paid: false },
-        { id: 's2', name: 'Primal Ordeal (Magma Bubble)', client: 'Druida Healer', value: 1200, date: today, status: 'Em Andamento', paid: true },
-        { id: 's3', name: 'The Secret Library', client: 'Sorcerer Supremo', value: 900, date: today, status: 'Concluído', paid: true }
+        { id: 's1', name: 'Soul War Full Service', client: 'Knight Boladao', value: 2500, date: today, status: 'Agendado', paid: false, comment: 'Agendado para após o Server Save.' },
+        { id: 's2', name: 'Primal Ordeal (Magma Bubble)', client: 'Druida Healer', value: 1200, date: today, status: 'Em Andamento', paid: true, comment: 'Pago integralmente via Market.' },
+        { id: 's3', name: 'The Secret Library', client: 'Sorcerer Supremo', value: 900, date: today, status: 'Concluído', paid: true, comment: '' }
       ];
     }
 
@@ -518,6 +534,7 @@
       const client = document.getElementById('srvClient').value.trim();
       const value = parseInt(document.getElementById('srvValue').value, 10) || 0;
       const date = document.getElementById('srvDate').value;
+      const comment = document.getElementById('srvComment').value.trim();
 
       const db = getUsersDB();
       db[currentUser].services.unshift({
@@ -526,6 +543,7 @@
         client,
         value,
         date,
+        comment,
         status: 'Agendado',
         paid: false
       });
@@ -534,6 +552,7 @@
       document.getElementById('srvName').value = '';
       document.getElementById('srvClient').value = '';
       document.getElementById('srvValue').value = '';
+      document.getElementById('srvComment').value = '';
 
       renderServices();
       showToast('Service adicionado com sucesso!');
@@ -635,11 +654,17 @@
           'Concluído': 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
         };
         const formattedDate = s.date ? s.date.split('-').reverse().join('/') : '-';
+        const commentHtml = s.comment
+          ? `<div class="mt-1 flex items-start gap-1.5 text-xs text-slate-400"><i data-lucide="message-square" class="w-3.5 h-3.5 text-gold-400/80 shrink-0 mt-0.5"></i><span>${escapeHTML(s.comment)}</span></div>`
+          : '';
 
         return `
           <tr class="hover:bg-obsidian-700/30 transition-colors">
-            <td class="py-3.5 px-4 font-medium text-white">${s.name}</td>
-            <td class="py-3.5 px-4 text-slate-300">${s.client}</td>
+            <td class="py-3.5 px-4">
+              <div class="font-medium text-white">${escapeHTML(s.name)}</div>
+              ${commentHtml}
+            </td>
+            <td class="py-3.5 px-4 text-slate-300">${escapeHTML(s.client)}</td>
             <td class="py-3.5 px-4 text-slate-400 text-xs">${formattedDate}</td>
             <td class="py-3.5 px-4 font-bold text-gold-400">${s.value.toLocaleString('pt-BR')} TC</td>
             <td class="py-3.5 px-4">
