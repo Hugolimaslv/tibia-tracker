@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TibiaTracker & Services — Controle de Services</title>
+  <title>Tteuh — Services Manager</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts Cinzel & Inter -->
@@ -70,8 +70,8 @@
         <div class="w-14 h-14 rounded-xl gold-gradient flex items-center justify-center text-obsidian-950 shadow-lg shadow-amber-500/20 mb-3">
           <i data-lucide="swords" class="w-8 h-8 stroke-[2.2]"></i>
         </div>
-        <h1 class="font-rpg font-bold text-2xl text-gold-500 tracking-wider">TibiaTracker</h1>
-        <p class="text-xs text-slate-400 uppercase tracking-widest mt-1">& Services Manager • Nuvem</p>
+        <h1 class="font-rpg font-bold text-2xl text-gold-500 tracking-wider">Tteuh</h1>
+        <p class="text-xs text-slate-400 uppercase tracking-widest mt-1">Services Manager • Nuvem</p>
       </div>
 
       <!-- Abas Login / Cadastro -->
@@ -146,8 +146,8 @@
               <i data-lucide="swords" class="w-6 h-6 stroke-[2.2]"></i>
             </div>
             <div>
-              <h1 class="font-rpg font-bold text-lg text-gold-500 tracking-wide leading-tight">TibiaTracker</h1>
-              <span class="text-xs text-slate-400 font-medium tracking-wider uppercase">& Services Manager</span>
+              <h1 class="font-rpg font-bold text-lg text-gold-500 tracking-wide leading-tight">Tteuh</h1>
+              <span class="text-xs text-slate-400 font-medium tracking-wider uppercase">Services Manager</span>
             </div>
           </div>
           <button type="button" onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1">
@@ -397,7 +397,6 @@
       }
     };
 
-    // Destrava a tela caso o Firebase demore mais de 3 segundos para carregar
     setTimeout(() => {
       if (!window._firebaseLoaded) {
         document.getElementById('loadingScreen').classList.add('hidden');
@@ -453,11 +452,11 @@
     function escapeHTML(str) {
       if (!str) return '';
       return String(str).replace(/[&<>"']/g, m => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
+        '&': '&',
+        '<': '<',
+        '>': '>',
+        '"': '"',
+        "'": '''
       })[m]);
     }
 
